@@ -19,9 +19,9 @@ class _Tela1State extends State<Tela1> {
   @override
   void initState()  {
     super.initState();
-      final wsUrl2 = Uri.parse('wss://stream.binance.com:9443/ws/btcusdt@trade');
-      final wsUrlx = Uri.parse('ws://localhost:8080/websocket');
-      final wsUrl = Uri.parse('ws://localhost:8080/gs-guide-websocket');
+       final wsUrl = Uri.parse('wss://stream.binance.com:9443/ws/btcusdt@trade');
+      // final wsUrlx = Uri.parse('ws://localhost:8080/websocket');
+       final wsUrlx = Uri.parse('ws://192.168.1.104:8080/gs-guide-websocket');
     final channel = WebSocketChannel.connect(wsUrl);
 
   
@@ -34,15 +34,18 @@ class _Tela1State extends State<Tela1> {
 
     channel.stream.listen((message) {
       Map getData = jsonDecode(message);
+      print(message);
+     
       setState(() {
         
         btcUsdtPrice = getData['p'];
       });
-      print(getData['p']);
-      // channel.sink.add('subscribe:geral');
-       channel.sink.add(jsonEncode({
-        'subscribe': '/topic/greetings'
-       }));
+
+      // print(getData['p']);
+      //  channel.sink.add('subscribe:geral');
+      //  channel.sink.add(jsonEncode({
+      //   'subscribe': '/topic/public'
+      //  }));
 
 
     }, onError: (error) {
