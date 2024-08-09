@@ -44,7 +44,7 @@ class _Tela4ScreenState extends State<Tela4Screen> {
           hintText: 'Digite o texto aqui',
         ),
       ),
-      floatingActionButton: socketConectado
+      floatingActionButton: socket.connected
           ? FloatingActionButton(
               onPressed: () {
                 sendMessage();
@@ -68,6 +68,7 @@ class _Tela4ScreenState extends State<Tela4Screen> {
       'extraHeaders': {'meu-codigo': '77777777'},
     });
     socket.connect();
+
 
 
 
