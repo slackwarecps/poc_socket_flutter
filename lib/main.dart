@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:poc_socket/dao/sorteio_repository.dart';
+import 'package:poc_socket/screens/pagina_cinco.dart';
+import 'package:poc_socket/screens/pagina_seis.dart';
+import 'package:provider/provider.dart';
 
 
-import 'package:poc_socket/tela4_screen.dart';
+import 'package:poc_socket/screens/tela4_screen.dart';
 
 
 void main()  {
 
- 
 
-  runApp(const MyApp());
+
+  runApp(
+   MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => SorteioRepository(), 
+          ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

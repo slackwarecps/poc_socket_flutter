@@ -7,9 +7,9 @@ class Env {
   static String _getKey(String key) {
     final value = _keys[key] ?? '';
 
-    if (value.isEmpty) {
-      throw Exception('Variável de ambiente não encontrada');
-    }
+    // if (value.isEmpty) {
+    //   throw Exception('Variável de ambiente não encontrada');
+    // }
 
     return value;
   }
