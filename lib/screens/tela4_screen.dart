@@ -1,4 +1,5 @@
-import 'dart:io';
+
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:poc_socket/dao/sorteio_repository.dart';
@@ -24,6 +25,16 @@ class _Tela4ScreenState extends State<Tela4Screen> {
     //return Env.apiUrl;
   }
 
+    void timer() async {
+    var random = Random();
+    while (true) {
+      var randomico = random.nextInt(200);
+      await Future.delayed(Duration(seconds: 5));
+      debugPrint('assincrono : #tela4 :: Número randomico: ${randomico}');
+      bolasSorteadas.addBola(Bola(numero: randomico, texto: "Automatico"));
+    }
+  }
+
   @override
   void initState() {
     initSocket();
@@ -31,11 +42,12 @@ class _Tela4ScreenState extends State<Tela4Screen> {
 
     print('[#inicio] iniciou o app');
     print('[#apiUrl] iniciou o app ${Env.apiUrl}');
+  //  timer();
   }
 
   limparSelecionadas() {
     setState(() {
-      debugPrint("nao limpou nada.");
+      debugPrint("Nao limpou nada.");
     });
   }
 
@@ -73,9 +85,9 @@ class _Tela4ScreenState extends State<Tela4Screen> {
             onPressed: () {
               bolasSorteadas.saveAll([
                 Bola(numero: 33, texto: "Idade de Cristo"),
-                Bola(numero: 34, texto: "Idade de Cristo"),
-                Bola(numero: 35, texto: "Idade de Cristo"),
-                Bola(numero: 36, texto: "Idade de Cristo")
+                Bola(numero: 22, texto: "Dois patinhos na lagoa"),
+                Bola(numero: 15, texto: "moça bonita"),
+                Bola(numero: 7, texto: "baixinho e mentiroso"),
               ]);
               print("adicionou a bola");
               setState(() {
@@ -128,7 +140,7 @@ class _Tela4ScreenState extends State<Tela4Screen> {
       'extraHeaders': {'meu-codigo': '77777777'},
     });
     socket.connect();
-    socket.disconnect();
+   // socket.disconnect();
 
     socket.onConnect((_) {
       print('Connection established');
@@ -146,10 +158,30 @@ class _Tela4ScreenState extends State<Tela4Screen> {
 
     // RECEBE O BROADCAST
     socket.on('my_response', (dadosRecebidos) {
-      debugPrint('evento[my_response]: $dadosRecebidos');
-      // SorteioRepository().addBola(dadosRecebidos['data']['bola']);
-      // SorteioRepository().setBola( dadosRecebidos['data']['bola']);
-      print(dadosRecebidos);
+      try {
+         if (dadosRecebidos['data'] == null || dadosRecebidos['data']['bola'] == null) {
+         print('Dados recebidos do socket não contêm um objeto bola.');
+        } else if  (dadosRecebidos['data']['bola'] != null) {
+        int numero = dadosRecebidos['data']['bola']['numero'];
+        String texto = dadosRecebidos['data']['bola']['texto'];
+        bolasSorteadas.addBola(Bola(numero: numero, texto: texto));
+        print('2 Dados recebidos do socket: ${dadosRecebidos} ');
+      } 
+
+
+
+      } catch (e) {
+        print('Erro ao receber dados do socket: ${e}');
+      }
+     
+
+
+    
+      if (dadosRecebidos['data']=='Connected') {
+        print('1 Dados recebidos do socket: ${dadosRecebidos} ');
+      } else {
+        print('3 NULL: Dados recebidos do socket: ${dadosRecebidos} ');
+      }
     });
 
     @override
@@ -163,10 +195,9 @@ class _Tela4ScreenState extends State<Tela4Screen> {
   sendMessage() {
     String message = 'ola amiguinho do Flutter..';
     if (message.isEmpty) return;
-    Map messageMap = {
-      'data': message,
-      'time': DateTime.now().millisecondsSinceEpoch,
+    Map dados = {
+      'data': Bola(numero: 44, texto: "quarenta e quatro").toMap(),
     };
-    socket.emit('my_broadcast_event', messageMap);
+    socket.emit('my_broadcast_event', dados);
   }
 }
